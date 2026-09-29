@@ -938,27 +938,47 @@
     data.append("lead_tier", lead.tier);
 
     var btn = $("#hb-send"); btn.disabled = true; btn.textContent = "Sending…";
-    fetch(CONFIG.formEndpoint, { method: "POST", body: data, headers: { "Accept": "application/json" } })
-      .then(function (res) {
-        if (!res.ok) throw new Error("bad status");
-        form.hidden = true; root.classList.add("hb-done");
-        $("#hb-thanks-name").textContent = name;
-        $("#hb-thanks-ref").textContent = ref;
-        $("#hb-thanks-date").textContent = q.info.pretty;
-        var c = [];
-        if (CONFIG.venuePhone) c.push("call us on " + CONFIG.venuePhone);
-        if (CONFIG.contactEmail) c.push("email " + CONFIG.contactEmail);
-        if (c.length) $("#hb-thanks-contact").textContent = "If you'd like to chat sooner, " + c.join(" or ") + ".";
-        $("#hb-quote-sub").textContent = "Reference " + ref + ", " + $("#hb-quote-sub").textContent;
-        $("#hb-go-details").remove();
-        var t = $("#hb-thanks"); t.hidden = false; t.focus();
-      })
-      .catch(function () {
-        btn.disabled = false; btn.textContent = "Send quote";
-        status.className = "hb-status is-error";
-        status.textContent = "Your quote didn't send. Check your connection and try again" + (CONFIG.contactEmail ? ", or email us at " + CONFIG.contactEmail + "." : ".");
-      });
-  });
+fetch(CONFIG.formEndpoint, {
+  method: "POST",
+  body: data
+})
+.then(function () {
+  form.hidden = true;
+  root.classList.add("hb-done");
+
+  $("#hb-thanks-name").textContent = name;
+  $("#hb-thanks-ref").textContent = ref;
+  $("#hb-thanks-date").textContent = q.info.pretty;
+
+  var c = [];
+  if (CONFIG.venuePhone) c.push("call us on " + CONFIG.venuePhone);
+  if (CONFIG.contactEmail) c.push("email " + CONFIG.contactEmail);
+
+  if (c.length) {
+    $("#hb-thanks-contact").textContent =
+      "If you'd like to chat sooner, " + c.join(" or ") + ".";
+  }
+
+  $("#hb-quote-sub").textContent =
+    "Reference " + ref + ", " + $("#hb-quote-sub").textContent;
+
+  $("#hb-go-details").remove();
+
+  var t = $("#hb-thanks");
+  t.hidden = false;
+  t.focus();
+})
+.catch(function () {
+  btn.disabled = false;
+  btn.textContent = "Send quote";
+
+  status.className = "hb-status is-error";
+  status.textContent =
+    "Your quote didn't send. Check your connection and try again" +
+    (CONFIG.contactEmail
+      ? ", or email us at " + CONFIG.contactEmail + "."
+      : ".");
+});
 
   calculate();
 })();
