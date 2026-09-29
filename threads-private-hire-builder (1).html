@@ -238,6 +238,32 @@
   #hb-builder .hb-quote { position: absolute; left: 0; top: 0; width: 100%; margin: 0; }
   #hb-builder .hb-quote-actions, #hb-builder .hb-bar { display: none !important; }
 }
+  /* Fix Extras section */
+#hb-builder #hb-opt-extras {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  width: 100%;
+  max-width: 100%;
+}
+
+#hb-builder #hb-opt-extras .hb-card {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+#hb-builder #hb-opt-extras .hb-card-body {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+#hb-builder #hb-opt-extras .hb-card-title,
+#hb-builder #hb-opt-extras .hb-card-desc {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
 </style><style>
 #hb-builder .hb-card.is-disabled { opacity: 0.5; cursor: not-allowed; }
 #hb-builder .hb-card.is-locked { cursor: default; }
