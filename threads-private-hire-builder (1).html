@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plan your private hire | Threads at Hilden Brewery</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Karla:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* All styles are scoped to #hb-builder so they won't clash with the host website */
+#hb-builder {
+  --hb-ink: #1F2A24;
+  --hb-hop: #3E5B45;
+  --hb-hop-soft: #E6ECE4;
+  --hb-copper: #B8692E;
+  --hb-amber: #D9A441;
+  --hb-line: #D5D9CF;
+  --hb-paper: #FFFFFF;
+  --hb-muted: #5E6A62;
+  --hb-error: #A33A2A;
+  font-family: "Karla", "Helvetica Neue", Arial, sans-serif;
+  color: var(--hb-ink);
+  font-size: 17px;
+  line-height: 1.55;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 20px 48px;
+  box-sizing: border-box;
+}
+#hb-builder *, #hb-builder *::before, #hb-builder *::after { box-sizing: inherit; }
+
+#hb-builder .hb-head { padding: 40px 0 28px; border-bottom: 2px solid var(--hb-ink); margin-bottom: 8px; }
+#hb-builder h1 {
+  font-family: "Young Serif", Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(2rem, 5vw, 2.9rem);
+  line-height: 1.05;
+  margin: 0 0 10px;
+  letter-spacing: -0.01em;
+}
+#hb-builder .hb-intro { margin: 0; color: var(--hb-muted); max-width: 56ch; }
+#hb-builder .hb-example-banner {
+  background: #FFF4D6; border: 1.5px solid var(--hb-amber); border-radius: 6px;
+  padding: 10px 14px; margin: 16px 0 0; font-size: 0.95rem;
+}
+
+/* Layout: steps and details on the left, quote on the right */
+#hb-builder .hb-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  grid-template-areas: "steps quote" "details quote";
+  gap: 0 48px;
+}
+#hb-builder .hb-steps { grid-area: steps; }
+#hb-builder .hb-details { grid-area: details; }
+#hb-builder .hb-quote-col { grid-area: quote; }
+#hb-builder .hb-quote { position: sticky; top: 20px; margin-top: 36px; }
+
+/* Steps */
+#hb-builder fieldset { border: 0; margin: 0; padding: 32px 0 12px; border-bottom: 1px solid var(--hb-line); }
+#hb-builder legend {
+  font-family: "Young Serif", Georgia, serif;
+  font-size: 1.45rem;
+  padding: 0;
+  margin-bottom: 6px;
+  color: var(--hb-hop);
+  display: flex; gap: 12px; align-items: baseline;
+  float: left; width: 100%;
+}
+#hb-builder legend + * { clear: both; }
+#hb-builder .hb-num {
+  font-family: "Karla", sans-serif; font-weight: 700; font-size: 0.95rem;
+  width: 28px; height: 28px; border-radius: 50%;
+  display: inline-grid; place-items: center;
+  border: 1.5px solid var(--hb-hop); color: var(--hb-hop);
+  flex-shrink: 0; transform: translateY(-2px);
+}
+#hb-builder .hb-step-note { color: var(--hb-muted); margin: 0 0 18px; font-size: 0.95rem; }
+#hb-builder .hb-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0 20px; }
+#hb-builder .hb-field { margin-bottom: 20px; }
+#hb-builder label, #hb-builder .hb-q { display: block; font-weight: 700; margin-bottom: 6px; }
+#hb-builder .hb-opt { font-weight: 400; color: var(--hb-muted); }
+#hb-builder .hb-hint { font-size: 0.9rem; color: var(--hb-muted); margin: 6px 0 0; }
+
+#hb-builder input[type="text"], #hb-builder input[type="email"], #hb-builder input[type="tel"],
+#hb-builder input[type="date"], #hb-builder input[type="number"], #hb-builder select, #hb-builder textarea {
+  width: 100%; font: inherit; color: var(--hb-ink); background: var(--hb-paper);
+  border: 1.5px solid var(--hb-line); border-radius: 6px; padding: 11px 13px;
+  transition: border-color 0.15s;
+}
+#hb-builder textarea { min-height: 110px; resize: vertical; }
+#hb-builder input:hover, #hb-builder select:hover, #hb-builder textarea:hover { border-color: #AEB5A8; }
+#hb-builder input:focus-visible, #hb-builder select:focus-visible, #hb-builder textarea:focus-visible,
+#hb-builder button:focus-visible {
+  outline: 3px solid var(--hb-amber); outline-offset: 1px;
+}
+
+/* Date feedback */
+#hb-builder .hb-date-info { font-size: 0.95rem; margin-top: 8px; min-height: 1.5em; }
+#hb-builder .hb-date-info.is-good { color: var(--hb-hop); font-weight: 500; }
+#hb-builder .hb-date-info.is-bad { color: var(--hb-error); font-weight: 500; }
+
+/* Option cards */
+#hb-builder .hb-cards { display: grid; gap: 10px; }
+#hb-builder .hb-card { position: relative; margin: 0; font-weight: 400; cursor: pointer; }
+#hb-builder .hb-card input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+#hb-builder .hb-card-body {
+  display: grid; grid-template-columns: 22px 1fr auto; gap: 4px 14px; align-items: start;
+  padding: 14px 16px; border: 1.5px solid var(--hb-line); border-radius: 8px;
+  transition: border-color 0.15s, background 0.15s;
+}
+#hb-builder .hb-card:hover .hb-card-body { border-color: #AEB5A8; }
+#hb-builder .hb-mark {
+  width: 20px; height: 20px; border: 1.5px solid #9AA394; margin-top: 3px;
+  display: grid; place-items: center; background: #fff;
+}
+#hb-builder .hb-card input[type="radio"] + .hb-card-body .hb-mark { border-radius: 50%; }
+#hb-builder .hb-card input[type="checkbox"] + .hb-card-body .hb-mark { border-radius: 4px; }
+#hb-builder .hb-card input:checked + .hb-card-body { border-color: var(--hb-hop); background: var(--hb-hop-soft); }
+#hb-builder .hb-card input:checked + .hb-card-body .hb-mark { border-color: var(--hb-hop); background: var(--hb-hop); }
+#hb-builder .hb-card input:checked + .hb-card-body .hb-mark::after {
+  content: ""; width: 8px; height: 8px; background: #fff; border-radius: 50%;
+}
+#hb-builder .hb-card input[type="checkbox"]:checked + .hb-card-body .hb-mark::after {
+  width: 5px; height: 10px; background: none; border-radius: 0;
+  border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg) translate(-1px, -1px);
+}
+#hb-builder .hb-card input:focus-visible + .hb-card-body { outline: 3px solid var(--hb-amber); outline-offset: 2px; }
+#hb-builder .hb-card-title { font-weight: 700; }
+#hb-builder .hb-card-desc { grid-column: 2; color: var(--hb-muted); font-size: 0.93rem; }
+#hb-builder .hb-card-price { font-weight: 700; white-space: nowrap; text-align: right; grid-column: 3; grid-row: 1 / span 2; }
+#hb-builder .hb-card-price small { display: block; font-weight: 400; color: var(--hb-muted); font-size: 0.8rem; }
+
+/* Quote panel: a brewery tap-list receipt */
+#hb-builder .hb-quote-inner {
+  border: 2px solid var(--hb-ink);
+  border-radius: 4px;
+  padding: 22px 22px 18px;
+  background: var(--hb-paper);
+}
+#hb-builder .hb-quote h2 {
+  font-family: "Young Serif", Georgia, serif; font-weight: 400;
+  font-size: 1.5rem; margin: 0 0 2px;
+}
+#hb-builder .hb-quote-sub { color: var(--hb-muted); font-size: 0.9rem; margin: 0 0 16px; }
+#hb-builder .hb-lines { list-style: none; margin: 0; padding: 0; }
+#hb-builder .hb-line {
+  display: flex; align-items: baseline; gap: 6px; padding: 6px 0; font-size: 0.97rem;
+}
+#hb-builder .hb-line-label { flex-shrink: 1; }
+#hb-builder .hb-line-label small { display: block; color: var(--hb-muted); font-size: 0.82rem; }
+#hb-builder .hb-line-dots { flex: 1; border-bottom: 1.5px dotted #B8BEB2; transform: translateY(-5px); min-width: 16px; }
+#hb-builder .hb-line-amt { font-weight: 700; white-space: nowrap; }
+#hb-builder .hb-line.is-topup .hb-line-label { color: var(--hb-copper); }
+#hb-builder .hb-empty { color: var(--hb-muted); font-size: 0.95rem; padding: 6px 0 10px; }
+#hb-builder .hb-total {
+  display: flex; justify-content: space-between; align-items: baseline;
+  border-top: 2px solid var(--hb-ink); margin-top: 10px; padding-top: 12px;
+}
+#hb-builder .hb-total-label { font-weight: 700; }
+#hb-builder .hb-total-amt {
+  font-family: "Young Serif", Georgia, serif; font-size: 2.1rem; line-height: 1;
+}
+#hb-builder .hb-meta { font-size: 0.9rem; color: var(--hb-muted); margin: 10px 0 0; }
+#hb-builder .hb-meta strong { color: var(--hb-ink); }
+#hb-builder .hb-quote-actions { margin-top: 16px; display: grid; gap: 8px; }
+#hb-builder .hb-btn {
+  font: inherit; font-weight: 700; border-radius: 6px; padding: 13px 20px; cursor: pointer;
+  border: 0; text-align: center; transition: background 0.15s;
+}
+#hb-builder .hb-btn-primary { background: var(--hb-copper); color: #fff; font-size: 1.05rem; }
+#hb-builder .hb-btn-primary:hover { background: #9C5724; }
+#hb-builder .hb-btn-quiet { background: transparent; color: var(--hb-hop); border: 1.5px solid var(--hb-line); }
+#hb-builder .hb-btn-quiet:hover { border-color: var(--hb-hop); }
+#hb-builder .hb-btn[disabled] { opacity: 0.6; cursor: wait; }
+#hb-builder .hb-small-print { font-size: 0.8rem; color: var(--hb-muted); margin: 14px 0 0; }
+
+/* Details */
+#hb-builder .hb-err { color: var(--hb-error); font-size: 0.9rem; margin-top: 6px; display: none; }
+#hb-builder .hb-field.is-invalid .hb-err { display: block; }
+#hb-builder .hb-field.is-invalid input, #hb-builder .hb-field.is-invalid select { border-color: var(--hb-error); }
+#hb-builder .hb-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+#hb-builder .hb-pill { position: relative; margin: 0; font-weight: 400; }
+#hb-builder .hb-pill input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+#hb-builder .hb-pill span {
+  display: inline-block; padding: 8px 15px; border: 1.5px solid var(--hb-line);
+  border-radius: 999px; cursor: pointer; user-select: none; transition: background 0.15s, border-color 0.15s;
+}
+#hb-builder .hb-pill span:hover { border-color: var(--hb-hop); }
+#hb-builder .hb-pill input:checked + span { background: var(--hb-hop); border-color: var(--hb-hop); color: #fff; }
+#hb-builder .hb-pill input:focus-visible + span { outline: 3px solid var(--hb-amber); outline-offset: 2px; }
+#hb-builder .hb-field.is-invalid .hb-pill span { border-color: var(--hb-error); }
+#hb-builder .hb-check { display: flex; gap: 12px; align-items: flex-start; font-weight: 400; margin-bottom: 12px; cursor: pointer; }
+#hb-builder .hb-check input { width: 20px; height: 20px; margin-top: 3px; accent-color: var(--hb-hop); flex-shrink: 0; }
+#hb-builder .hb-privacy { font-size: 0.9rem; color: var(--hb-muted); }
+#hb-builder a { color: var(--hb-hop); }
+#hb-builder .hb-send-wrap { padding-top: 26px; }
+#hb-builder .hb-status { margin-top: 14px; }
+#hb-builder .hb-status.is-error { color: var(--hb-error); }
+#hb-builder .hb-hp { position: absolute; left: -9999px; }
+
+/* Thank-you */
+#hb-builder .hb-thanks { padding: 40px 0; }
+#hb-builder .hb-thanks h2 { font-family: "Young Serif", Georgia, serif; font-weight: 400; font-size: 2rem; margin: 0 0 12px; color: var(--hb-hop); }
+#hb-builder .hb-thanks p { max-width: 52ch; }
+
+/* Mobile total bar */
+#hb-builder .hb-bar {
+  display: none; position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
+  background: var(--hb-ink); color: #fff;
+  padding: 12px 20px calc(12px + env(safe-area-inset-bottom, 0px));
+  align-items: center; justify-content: space-between; gap: 12px;
+}
+#hb-builder .hb-bar-total { font-family: "Young Serif", Georgia, serif; font-size: 1.4rem; line-height: 1.1; }
+#hb-builder .hb-bar small { display: block; font-size: 0.8rem; opacity: 0.8; font-family: "Karla", sans-serif; }
+#hb-builder .hb-bar button { background: var(--hb-amber); color: var(--hb-ink); font: inherit; font-weight: 700; border: 0; border-radius: 6px; padding: 10px 16px; cursor: pointer; }
+
+@media (max-width: 900px) {
+  #hb-builder .hb-layout { grid-template-columns: 1fr; grid-template-areas: "steps" "quote" "details"; }
+  #hb-builder .hb-quote { position: static; }
+  #hb-builder .hb-bar { display: flex; }
+  #hb-builder { padding-bottom: 96px; }
+  #hb-builder.hb-quote-visible .hb-bar, #hb-builder.hb-done .hb-bar { display: none; }
+}
+@media (max-width: 560px) {
+  #hb-builder .hb-row { grid-template-columns: 1fr; }
+  #hb-builder .hb-card-body { grid-template-columns: 22px 1fr; }
+  #hb-builder .hb-card-price { grid-column: 2; grid-row: auto; text-align: left; }
+  #hb-builder .hb-card-price small { display: inline; margin-left: 4px; }
+}
+@media (prefers-reduced-motion: reduce) { #hb-builder * { transition: none !important; } }
+
+/* Print or save as PDF: just the quote */
+@media print {
+  body * { visibility: hidden; }
+  #hb-builder .hb-quote, #hb-builder .hb-quote * { visibility: visible; }
+  #hb-builder .hb-quote { position: absolute; left: 0; top: 0; width: 100%; margin: 0; }
+  #hb-builder .hb-quote-actions, #hb-builder .hb-bar { display: none !important; }
+}
+</style><style>
+#hb-builder .hb-card.is-disabled { opacity: 0.5; cursor: not-allowed; }
+#hb-builder .hb-card.is-locked { cursor: default; }
+#hb-builder .hb-warns { list-style: none; margin: 0 0 8px; padding: 0; }
+#hb-builder .hb-warns li { color: var(--hb-error); font-weight: 500; font-size: 0.95rem; margin-bottom: 4px; }
+#hb-builder .hb-subhead { font-weight: 700; margin: 22px 0 10px; }
+#hb-builder [data-mode-only][hidden] { display: none; }
+#hb-builder .hb-line-amt.is-request { font-weight: 500; color: var(--hb-muted); }
+#hb-builder .hb-drinks { display: grid; gap: 10px; }
+#hb-builder .hb-drink {
+  display: grid; grid-template-columns: 1fr auto auto; gap: 10px 16px; align-items: center;
+  padding: 12px 16px; border: 1.5px solid var(--hb-line); border-radius: 8px;
+}
+#hb-builder .hb-drink.has-qty { border-color: var(--hb-hop); background: var(--hb-hop-soft); }
+#hb-builder .hb-drink-title { margin: 0; }
+#hb-builder .hb-drink-price { display: block; font-size: 0.9rem; color: var(--hb-muted); }
+#hb-builder .hb-stepper { display: flex; align-items: stretch; border: 1.5px solid var(--hb-line); border-radius: 6px; background: #fff; overflow: hidden; }
+#hb-builder .hb-stepper button { font: inherit; font-size: 1.2rem; width: 40px; border: 0; background: transparent; color: var(--hb-hop); cursor: pointer; }
+#hb-builder .hb-stepper button:hover { background: var(--hb-hop-soft); }
+#hb-builder .hb-stepper input[type="number"] { width: 64px; border: 0; border-radius: 0; text-align: center; padding: 8px 4px; -moz-appearance: textfield; }
+#hb-builder .hb-stepper input::-webkit-outer-spin-button, #hb-builder .hb-stepper input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+#hb-builder .hb-each { font: inherit; font-size: 0.9rem; font-weight: 700; color: var(--hb-hop); background: none; border: 0; text-decoration: underline; cursor: pointer; padding: 6px 0; white-space: nowrap; }
+@media (max-width: 560px) {
+  #hb-builder .hb-drink { grid-template-columns: 1fr auto; }
+  #hb-builder .hb-drink-info { grid-column: 1 / -1; }
+  #hb-builder .hb-stepper { justify-self: start; }
+}
+#hb-builder .hb-modes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+#hb-builder .hb-mode { position: relative; margin: 0; font-weight: 400; cursor: pointer; display: flex; }
+#hb-builder .hb-mode input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+#hb-builder .hb-mode-body {
+  display: flex; flex-direction: column; width: 100%;
+  padding: 18px 16px 16px; border: 1.5px solid var(--hb-line); border-radius: 8px;
+  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+}
+#hb-builder .hb-mode:hover .hb-mode-body { border-color: #AEB5A8; }
+#hb-builder .hb-mode input:checked + .hb-mode-body { border-color: var(--hb-hop); background: var(--hb-hop-soft); box-shadow: inset 0 0 0 1px var(--hb-hop); }
+#hb-builder .hb-mode input:focus-visible + .hb-mode-body { outline: 3px solid var(--hb-amber); outline-offset: 2px; }
+#hb-builder .hb-mode-top { display: flex; justify-content: space-between; align-items: center; min-height: 24px; margin-bottom: 10px; }
+#hb-builder .hb-mode .hb-mark { border-radius: 50%; margin-top: 0; }
+#hb-builder .hb-mode input:checked + .hb-mode-body .hb-mark { border-color: var(--hb-hop); background: var(--hb-hop); }
+#hb-builder .hb-mode input:checked + .hb-mode-body .hb-mark::after { content: ""; width: 8px; height: 8px; background: #fff; border-radius: 50%; }
+#hb-builder .hb-tag { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--hb-copper); }
+#hb-builder .hb-mode-title { font-weight: 700; line-height: 1.3; }
+#hb-builder .hb-mode-price { font-family: "Young Serif", Georgia, serif; font-size: 1.7rem; line-height: 1.1; margin: 8px 0 0; }
+#hb-builder .hb-mode-price.is-text { font-size: 1.25rem; }
+#hb-builder .hb-mode-sub { font-size: 0.85rem; color: var(--hb-muted); margin-bottom: 12px; }
+#hb-builder .hb-mode ul { list-style: none; margin: 0; padding: 12px 0 0; border-top: 1px solid var(--hb-line); font-size: 0.9rem; }
+#hb-builder .hb-mode li { padding-left: 18px; position: relative; margin-bottom: 6px; }
+#hb-builder .hb-mode li::before { content: ""; position: absolute; left: 2px; top: 0.55em; width: 7px; height: 7px; border-radius: 50%; background: var(--hb-amber); }
+@media (max-width: 1000px) and (min-width: 901px), (max-width: 680px) {
+  #hb-builder .hb-modes { grid-template-columns: 1fr; }
+  #hb-builder .hb-mode-body { display: grid; grid-template-columns: 1fr auto; column-gap: 12px; }
+  #hb-builder .hb-mode-top { grid-column: 1 / -1; }
+  #hb-builder .hb-mode-price { grid-column: 2; grid-row: 2; margin: 0; text-align: right; }
+  #hb-builder .hb-mode-sub { grid-column: 2; grid-row: 3; text-align: right; }
+  #hb-builder .hb-mode-title { grid-column: 1; grid-row: 2; }
+  #hb-builder .hb-mode ul { grid-column: 1 / -1; }
+}
+</style>
+</head>
+<body style="margin:0;background:#fff;">
+
+<div id="hb-builder">
+  <header class="hb-head">
+    <h1>Plan your party at Threads</h1>
+    <p class="hb-intro">Birthdays, anniversaries, engagement parties and more. Choose your space, food and drinks to see your price straight away, then send it to us and we'll confirm your date.</p>
+  </header>
+
+  <div class="hb-layout">
+    <div class="hb-steps" id="hb-steps">
+
+      <fieldset>
+        <legend><span class="hb-num">1</span>Type of hire</legend>
+        <div class="hb-modes" id="hb-opt-mode" role="radiogroup" aria-label="Type of hire"></div>
+        <div class="hb-field" data-mode-only="evening daytime" style="margin-top:20px">
+          <span class="hb-q" id="hb-timing-q">Evening or daytime?</span>
+          <div class="hb-pills" role="radiogroup" aria-labelledby="hb-timing-q">
+            <label class="hb-pill"><input type="radio" name="timing" value="evening" checked><span>Evening, 6 hours exclusive</span></label>
+            <label class="hb-pill"><input type="radio" name="timing" value="daytime"><span>Daytime, within opening hours</span></label>
+          </div>
+          <p class="hb-hint">Daytime hire is priced on request.</p>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend><span class="hb-num">2</span>Date, time and guests</legend>
+        <div class="hb-row">
+          <div class="hb-field">
+            <label for="hb-date">Event date</label>
+            <input type="date" id="hb-date">
+            <div class="hb-date-info" id="hb-date-info" aria-live="polite"></div>
+          </div>
+          <div class="hb-field" data-mode-only="evening package">
+            <label for="hb-slot">Event times</label>
+            <select id="hb-slot"></select>
+          </div>
+        </div>
+        <div class="hb-row">
+          <div class="hb-field">
+            <label for="hb-guests">Number of guests</label>
+            <input type="number" id="hb-guests" min="1" step="1" inputmode="numeric" value="60">
+            <p class="hb-hint" id="hb-guest-hint"></p>
+          </div>
+          <div class="hb-field">
+            <label for="hb-occasion">Occasion</label>
+            <select id="hb-occasion">
+              <option value="">Choose one</option>
+              <option>Birthday</option><option>Anniversary</option><option>Engagement party</option>
+              <option>Christening or naming day</option><option>Retirement</option>
+              <option>Work or corporate event</option><option>Other celebration</option>
+            </select>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend><span class="hb-num">3</span>Your space</legend>
+        <p class="hb-step-note" id="hb-space-note"></p>
+        <div class="hb-cards" id="hb-opt-spaces"></div>
+      </fieldset>
+
+      <fieldset>
+        <legend><span class="hb-num">4</span>Food</legend>
+        <p class="hb-step-note" id="hb-food-note"></p>
+        <div class="hb-cards" id="hb-opt-food"></div>
+        <p class="hb-subhead">Something sweet</p>
+        <div class="hb-cards" id="hb-opt-dessert"></div>
+        <p class="hb-hint" style="margin-top:14px">See our <a href="#" id="hb-menu-link" target="_blank" rel="noopener">sample buffet menus</a>.</p>
+      </fieldset>
+
+      <fieldset>
+        <legend><span class="hb-num">5</span>Drinks</legend>
+        <p class="hb-step-note">Choose how many of each you'd like, or tap "One per guest" to match your guest numbers.</p>
+        <div class="hb-drinks" id="hb-opt-drinks"></div>
+      </fieldset>
+
+      <fieldset>
+        <legend><span class="hb-num">6</span>Extras</legend>
+        <div class="hb-field" data-mode-only="package">
+          <label for="hb-shimmer">Shimmer wall colour</label>
+          <select id="hb-shimmer"></select>
+        </div>
+        <div class="hb-cards" id="hb-opt-extras"></div>
+      </fieldset>
+    </div>
+
+    <div class="hb-quote-col">
+      <aside class="hb-quote" id="hb-quote" aria-labelledby="hb-quote-title">
+        <div class="hb-quote-inner">
+          <h2 id="hb-quote-title">Your quote</h2>
+          <p class="hb-quote-sub" id="hb-quote-sub">Choose a date to start</p>
+          <ul class="hb-warns" id="hb-warns" aria-live="polite"></ul>
+          <ul class="hb-lines" id="hb-lines"></ul>
+          <div class="hb-total">
+            <span class="hb-total-label" id="hb-total-label">Estimated total</span>
+            <span class="hb-total-amt" id="hb-total" aria-live="polite">£0</span>
+          </div>
+          <p class="hb-meta" id="hb-meta"></p>
+          <div class="hb-quote-actions">
+            <button type="button" class="hb-btn hb-btn-primary" id="hb-go-details">Send my quote</button>
+            <button type="button" class="hb-btn hb-btn-quiet" id="hb-print">Print or save this quote</button>
+          </div>
+          <p class="hb-small-print" id="hb-small-print"></p>
+        </div>
+      </aside>
+    </div>
+
+    <div class="hb-details" id="hb-details">
+      <form id="hb-form" novalidate>
+        <fieldset>
+          <legend><span class="hb-num">7</span>Send your quote</legend>
+          <p class="hb-step-note">We'll check your date and come back to you to confirm.</p>
+          <div class="hb-hp" aria-hidden="true">
+            <label for="hb-website">Leave this empty</label>
+            <input type="text" id="hb-website" name="_gotcha" tabindex="-1" autocomplete="off">
+          </div>
+          <div class="hb-field" data-required>
+            <label for="hb-name">Your name</label>
+            <input type="text" id="hb-name" name="name" autocomplete="name">
+            <div class="hb-err">Add your name.</div>
+          </div>
+          <div class="hb-row">
+            <div class="hb-field" data-required>
+              <label for="hb-email">Email</label>
+              <input type="email" id="hb-email" name="email" autocomplete="email">
+              <div class="hb-err">Add an email address we can reply to, like name@example.com.</div>
+            </div>
+            <div class="hb-field" data-required>
+              <label for="hb-phone">Phone</label>
+              <input type="tel" id="hb-phone" name="phone" autocomplete="tel">
+              <div class="hb-err">Add a phone number.</div>
+            </div>
+          </div>
+          <div class="hb-field" data-required data-group="date_flex">
+            <span class="hb-q" id="hb-flex-q">If your date is taken, could you move it?</span>
+            <div class="hb-pills" role="radiogroup" aria-labelledby="hb-flex-q">
+              <label class="hb-pill"><input type="radio" name="date_flex" value="Fixed"><span>No, it's fixed</span></label>
+              <label class="hb-pill"><input type="radio" name="date_flex" value="Flexible"><span>Yes, we're flexible</span></label>
+            </div>
+            <div class="hb-err">Choose one option.</div>
+          </div>
+          <div class="hb-field" data-required data-group="decision_timeline">
+            <span class="hb-q" id="hb-when-q">When are you hoping to book?</span>
+            <div class="hb-pills" role="radiogroup" aria-labelledby="hb-when-q">
+              <label class="hb-pill"><input type="radio" name="decision_timeline" value="Ready now"><span>Ready now</span></label>
+              <label class="hb-pill"><input type="radio" name="decision_timeline" value="Within 2 weeks"><span>Within 2 weeks</span></label>
+              <label class="hb-pill"><input type="radio" name="decision_timeline" value="Within a month"><span>Within a month</span></label>
+              <label class="hb-pill"><input type="radio" name="decision_timeline" value="Just browsing"><span>Just browsing</span></label>
+            </div>
+            <div class="hb-err">Choose one option.</div>
+          </div>
+          <div class="hb-field">
+            <label for="hb-notes">Anything else we should know? <span class="hb-opt">(optional)</span></label>
+            <textarea id="hb-notes" name="notes" placeholder="Dietary needs, accessibility, your theme, questions about the quote"></textarea>
+          </div>
+          <div class="hb-field" data-required data-group="consent_contact">
+            <label class="hb-check"><input type="checkbox" name="consent_contact" value="Yes"> I'm happy for Threads at Hilden to contact me about this quote.</label>
+            <div class="hb-err">Tick this so we can reply to you.</div>
+          </div>
+          <label class="hb-check"><input type="checkbox" name="consent_marketing" value="Yes"> Sign me up for news, offers and events.</label>
+          <p class="hb-privacy">We only use your details to respond to your quote and, if you ticked the box above, to send you news. Read our <a href="#" id="hb-privacy-link" target="_blank" rel="noopener">privacy policy</a>.</p>
+          <div class="hb-send-wrap">
+            <button type="submit" class="hb-btn hb-btn-primary" id="hb-send">Send quote</button>
+            <div class="hb-status" id="hb-status" role="status" aria-live="polite"></div>
+          </div>
+        </fieldset>
+      </form>
+      <div class="hb-thanks" id="hb-thanks" hidden tabindex="-1">
+        <h2>Quote sent</h2>
+        <p>Thank you, <span id="hb-thanks-name"></span>. Your quote reference is <strong id="hb-thanks-ref"></strong>. We'll check <span id="hb-thanks-date"></span> and be in touch soon.</p>
+        <p id="hb-thanks-contact"></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="hb-bar">
+    <div><small>Estimated total</small><span class="hb-bar-total" id="hb-bar-total">£0</span></div>
+    <button type="button" id="hb-bar-btn">See breakdown</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  /* =====================================================================
+     SETTINGS: edit everything in this block. Nothing below it needs changing.
+     ===================================================================== */
+  var CONFIG = {
+    // Where quotes are sent (Formspree or your website's form service)
+    formEndpoint: "https://formspree.io/f/YOUR_FORM_ID",
+
+    contactEmail: "weddings@hildenhouse.com",
+    venuePhone: "",
+    privacyPolicyUrl: "https://threadshildenbrewery.com/privacy-policy",
+    menuUrl: "https://img1.wsimg.com/blobby/go/3646bf7c-0b4e-464c-bba8-2287f318ce9e/hilden%20buffet%20menu-5559a36.pdf",
+
+    depositAmount: 250,     // Fixed deposit due on booking (0 to hide)
+    pricesIncludeVat: null,  // true, false, or null to say nothing about VAT
+    quoteValidDays: 14,
+    bookedDates: [ /* "2026-11-14" */ ],
+    maxMonthsAhead: 18,
+
+    maxGuests: 120,
+    packageMinGuests: 50,
+    gardenMonths: [5, 6, 7, 8, 9, 10],   // Garden stretch tent available May to October
+
+    modes: [
+      { id: "package", title: "Party package", price: "£750", sub: "for 50 guests", tag: "Food included",
+        includes: ["6 hours' exclusive ground floor hire", "Buffet for 50 guests", "Shimmer wall", "Minimum 50 guests"] },
+      { id: "custom", title: "Build your own", price: "From £250", sub: "per space for evening hire",
+        includes: ["Choose your space and times", "Pick your own food and drinks", "Evening or daytime hire"] }
+    ],
+    modeTitles: { package: "Party package", evening: "Build your own: evening hire", daytime: "Build your own: daytime hire" },
+    timeSlots: ["5pm to 11pm", "6pm to 12am", "7pm to 1am"],
+
+    packagePrice: 750,
+    packageGuestsIncluded: 50,
+
+    // price: number, or null for "price on request"
+    spaces: {
+      evening: [
+        { id: "downstairs", title: "Exclusive ground floor venue hire", desc: "Accessible bathrooms, a fully licensed bar, courtyard seating and PA system.", price: 250 },
+        { id: "gardens",    title: "Garden stretch tent", desc: "Available May to October only.", price: 250, garden: true },
+        { id: "upstairs",   title: "Upstairs function room", desc: "For food and meals only. This is a listed building and there is no lift to the upstairs room.", price: 250 }
+      ],
+      daytime: [
+        { id: "upstairs",   title: "Upstairs function room", desc: "For food and meals only. This is a listed building and there is no lift to the upstairs room.", price: null },
+        { id: "gardens",    title: "Garden stretch tent", desc: "Available May to October only.", price: null, garden: true },
+        { id: "semi",       title: "Ground floor (semi-private)", desc: "Free with food. Holds up to 30 people.", price: 0, maxGuests: 30, needsFood: true }
+      ]
+    },
+
+    // All food is priced per guest. from: true shows it as a starting price.
+    food: [
+      { id: "none",        title: "No food",                     price: 0 },
+      { id: "finger",      title: "Finger buffet",               price: 8, from: true },
+      { id: "fork",        title: "Fork buffet",                 price: 8, from: true },
+      { id: "pizza",       title: "Pizza party and loaded fries", price: 8, from: true },
+      { id: "charcuterie", title: "Charcuterie cart",            price: 8, from: true }
+    ],
+    packageFood: ["finger", "charcuterie"],   // Buffet choices included in the package
+    dessert: { id: "dessert", title: "Dessert buffet", price: 6 },
+
+    // Drinks: customers choose a quantity of each. unit is shown after the price.
+    drinks: [
+      { id: "prosecco", title: "Prosecco reception", price: 6,   unit: "per glass" },
+      { id: "beer",     title: "Beer reception",     price: 5,   unit: "per bottle" },
+      { id: "cocktail", title: "Cocktail reception", price: 8,   unit: "per cocktail" },
+      { id: "tea",      title: "Tea and coffee",     price: 1.5, unit: "per person" }
+    ],
+    maxDrinksEach: 500,
+
+    shimmerColours: ["Gold", "Pink", "Silver"],
+    extras: [
+      { id: "entertainment", title: "Live entertainment", desc: "We'll send you our supplier list.", price: null },
+      { id: "decor",         title: "In-house decor",     desc: "We'll send you our full list of decor options.", price: null }
+    ]
+  };
+  /* ================================================================== */
+
+  var root = document.getElementById("hb-builder");
+  var $ = function (s) { return root.querySelector(s); };
+  var money = new Intl.NumberFormat("en-GB", { style: "currency", currency: "GBP", minimumFractionDigits: 0, maximumFractionDigits: 2 });
+  var money2 = new Intl.NumberFormat("en-GB", { style: "currency", currency: "GBP", minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  var fmt = function (n) { var r = Math.round(n * 100) / 100; return r % 1 === 0 ? money.format(r) : money2.format(r); };
+
+  $("#hb-privacy-link").href = CONFIG.privacyPolicyUrl;
+  $("#hb-menu-link").href = CONFIG.menuUrl;
+
+  function card(o, name, type, priceText, extraClass) {
+    var label = document.createElement("label");
+    label.className = "hb-card" + (extraClass ? " " + extraClass : "");
+    var input = document.createElement("input");
+    input.type = type; input.name = name; input.value = o.id;
+    var body = document.createElement("span"); body.className = "hb-card-body";
+    var mark = document.createElement("span"); mark.className = "hb-mark";
+    var title = document.createElement("span"); title.className = "hb-card-title"; title.textContent = o.title;
+    var price = document.createElement("span"); price.className = "hb-card-price";
+    if (priceText && typeof priceText === "object") {
+      price.textContent = priceText.main;
+      if (priceText.sub) { var sm = document.createElement("small"); sm.textContent = priceText.sub; price.appendChild(sm); }
+    } else price.textContent = priceText || "";
+    body.appendChild(mark); body.appendChild(title); body.appendChild(price);
+    if (o.desc) { var d = document.createElement("span"); d.className = "hb-card-desc"; d.textContent = o.desc; body.appendChild(d); }
+    label.appendChild(input); label.appendChild(body);
+    return label;
+  }
+  function fill(sel, opts) {
+    var el = $(sel); el.textContent = "";
+    opts.forEach(function (t) { var o = document.createElement("option"); o.textContent = t; el.appendChild(o); });
+  }
+
+  // Static options
+  CONFIG.modes.forEach(function (m, i) {
+    var label = document.createElement("label"); label.className = "hb-mode";
+    var input = document.createElement("input"); input.type = "radio"; input.name = "mode"; input.value = m.id;
+    if (i === 0) input.checked = true;
+    var body = document.createElement("span"); body.className = "hb-mode-body";
+    var top = document.createElement("span"); top.className = "hb-mode-top";
+    var mark = document.createElement("span"); mark.className = "hb-mark"; top.appendChild(mark);
+    if (m.tag) { var tg = document.createElement("span"); tg.className = "hb-tag"; tg.textContent = m.tag; top.appendChild(tg); }
+    var t = document.createElement("span"); t.className = "hb-mode-title"; t.textContent = m.title;
+    var pr = document.createElement("span"); pr.className = "hb-mode-price" + (/\d/.test(m.price) ? "" : " is-text"); pr.textContent = m.price;
+    var sb = document.createElement("span"); sb.className = "hb-mode-sub"; sb.textContent = m.sub;
+    var ul = document.createElement("ul");
+    m.includes.forEach(function (x) { var li = document.createElement("li"); li.textContent = x; ul.appendChild(li); });
+    [top, t, pr, sb, ul].forEach(function (el) { body.appendChild(el); });
+    label.appendChild(input); label.appendChild(body);
+    $("#hb-opt-mode").appendChild(label);
+  });
+  fill("#hb-slot", CONFIG.timeSlots);
+  fill("#hb-shimmer", CONFIG.shimmerColours);
+  $("#hb-opt-dessert").appendChild(card(CONFIG.dessert, "dessert", "checkbox", { main: "+" + fmt(CONFIG.dessert.price), sub: "per guest" }));
+  CONFIG.drinks.forEach(function (d) {
+    var row = document.createElement("div"); row.className = "hb-drink";
+    var info = document.createElement("div"); info.className = "hb-drink-info";
+    var t = document.createElement("label"); t.className = "hb-drink-title"; t.htmlFor = "hb-qty-" + d.id; t.textContent = d.title;
+    var pr = document.createElement("span"); pr.className = "hb-drink-price"; pr.textContent = fmt(d.price) + " " + d.unit;
+    info.appendChild(t); info.appendChild(pr);
+    var ctl = document.createElement("div"); ctl.className = "hb-stepper";
+    var minus = document.createElement("button"); minus.type = "button"; minus.textContent = "−"; minus.setAttribute("aria-label", "Fewer " + d.title.toLowerCase());
+    var q = document.createElement("input"); q.type = "number"; q.id = "hb-qty-" + d.id; q.min = "0"; q.max = String(CONFIG.maxDrinksEach); q.step = "1"; q.value = "0"; q.inputMode = "numeric"; q.setAttribute("data-drink", d.id);
+    var plus = document.createElement("button"); plus.type = "button"; plus.textContent = "+"; plus.setAttribute("aria-label", "More " + d.title.toLowerCase());
+    function setQ(v) { q.value = Math.max(0, Math.min(CONFIG.maxDrinksEach, v)); calculate(); }
+    minus.addEventListener("click", function () { setQ((Number(q.value) || 0) - 1); });
+    plus.addEventListener("click", function () { setQ((Number(q.value) || 0) + 1); });
+    ctl.appendChild(minus); ctl.appendChild(q); ctl.appendChild(plus);
+    var each = document.createElement("button"); each.type = "button"; each.className = "hb-each"; each.textContent = "One per guest";
+    each.addEventListener("click", function () { setQ(Math.floor(Number($("#hb-guests").value) || 0)); });
+    row.appendChild(info); row.appendChild(ctl); row.appendChild(each);
+    $("#hb-opt-drinks").appendChild(row);
+  });
+  function drinkQty(id) { var el = $("#hb-qty-" + id); return Math.max(0, Math.floor(Number(el.value) || 0)); }
+  CONFIG.extras.forEach(function (x) { $("#hb-opt-extras").appendChild(card(x, "extras", "checkbox", x.price == null ? "On request" : "+" + fmt(x.price))); });
+
+  // Dates
+  function isoLocal(d) { return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10); }
+  var today = new Date(), todayIso = isoLocal(today);
+  var maxDate = new Date(today.getFullYear(), today.getMonth() + CONFIG.maxMonthsAhead, today.getDate());
+  $("#hb-date").min = todayIso; $("#hb-date").max = isoLocal(maxDate);
+  var dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  function analyseDate(v) {
+    if (!v) return { state: "empty" };
+    var p = v.split("-").map(Number), d = new Date(p[0], p[1] - 1, p[2]);
+    if (isNaN(d)) return { state: "empty" };
+    if (v < todayIso) return { state: "past" };
+    if (d > maxDate) return { state: "far" };
+    if (CONFIG.bookedDates.indexOf(v) !== -1) return { state: "booked" };
+    return { state: "ok", month: d.getMonth() + 1,
+      pretty: dayNames[d.getDay()] + " " + d.getDate() + " " + d.toLocaleString("en-GB", { month: "long" }) + " " + d.getFullYear() };
+  }
+
+  function getMode() {
+    var m = chosen("mode");
+    return m === "package" ? "package" : (chosen("timing") || "evening");
+  }
+  function chosen(name) { var el = root.querySelector('input[name="' + name + '"]:checked'); return el ? el.value : null; }
+  function checkedAll(name) { return Array.prototype.map.call(root.querySelectorAll('input[name="' + name + '"]:checked'), function (e) { return e.value; }); }
+  function find(list, id) { return list.filter(function (o) { return o.id === id; })[0]; }
+
+  var currentMode = null;
+
+  function renderModeParts(mode) {
+    // Spaces
+    var wrap = $("#hb-opt-spaces"), prevSpaces = checkedAll("spaces");
+    wrap.textContent = "";
+    if (mode === "package") {
+      var inc = card({ id: "downstairs", title: "Exclusive ground floor venue hire", desc: "Included in the package. Accessible bathrooms, a fully licensed bar, courtyard seating and PA system." }, "spaces_locked", "checkbox", "Included", "is-locked");
+      var ii = inc.querySelector("input"); ii.checked = true; ii.disabled = true;
+      wrap.appendChild(inc);
+      CONFIG.spaces.evening.filter(function (s) { return s.id !== "downstairs"; }).forEach(function (s) {
+        wrap.appendChild(card(s, "spaces", "checkbox", "+" + fmt(s.price)));
+      });
+      $("#hb-space-note").textContent = "Exclusive ground floor venue hire is included. You can add another space.";
+    } else {
+      var list = CONFIG.spaces[mode === "daytime" ? "daytime" : "evening"];
+      list.forEach(function (s) {
+        var pt = s.price == null ? "On request" : s.price === 0 ? "Free with food" : fmt(s.price);
+        wrap.appendChild(card(s, "spaces", "checkbox", pt));
+      });
+      $("#hb-space-note").textContent = mode === "daytime" ? "Choose the space you'd like. We'll confirm daytime pricing with you." : "Each space is priced for 6 hours of exclusive use. Choose as many as you need.";
+    }
+    Array.prototype.forEach.call(wrap.querySelectorAll('input[name="spaces"]'), function (i) { if (prevSpaces.indexOf(i.value) !== -1) i.checked = true; });
+
+    // Food
+    var fw = $("#hb-opt-food"), prevFood = chosen("food");
+    fw.textContent = "";
+    var foods = mode === "package" ? CONFIG.food.filter(function (f) { return CONFIG.packageFood.indexOf(f.id) !== -1; }) : CONFIG.food;
+    foods.forEach(function (f) {
+      var pt = mode === "package" ? "Included for " + CONFIG.packageGuestsIncluded
+        : f.price === 0 ? "" : { main: (f.from ? "From " : "+") + fmt(f.price), sub: "per guest" };
+      fw.appendChild(card(f, "food", "radio", pt));
+    });
+    var pick = fw.querySelector('input[value="' + prevFood + '"]') || fw.querySelector("input");
+    pick.checked = true;
+    $("#hb-food-note").textContent = mode === "package"
+      ? "Your package includes a buffet for " + CONFIG.packageGuestsIncluded + " guests. Extra guests are priced per head."
+      : "Priced per guest. Prices start from the amount shown and we'll confirm your final menu price.";
+
+    // Mode-only fields
+    Array.prototype.forEach.call(root.querySelectorAll("[data-mode-only]"), function (el) {
+      el.hidden = el.getAttribute("data-mode-only").split(" ").indexOf(mode) === -1;
+    });
+  }
+
+  var lastQuote = null;
+  function calculate() {
+    var mode = getMode();
+    if (mode !== currentMode) { renderModeParts(mode); currentMode = mode; }
+
+    var info = analyseDate($("#hb-date").value);
+    var guests = Math.max(0, Math.floor(Number($("#hb-guests").value) || 0));
+    var warns = [];
+
+    // Date message
+    var di = $("#hb-date-info"); di.className = "hb-date-info";
+    var msgs = { past: "Choose a date from today onwards.", far: "We're taking bookings up to " + CONFIG.maxMonthsAhead + " months ahead.", booked: "That date is already booked. Try another date." };
+    if (info.state === "ok") { di.classList.add("is-good"); di.textContent = info.pretty + ". Available to quote."; }
+    else if (msgs[info.state]) { di.classList.add("is-bad"); di.textContent = msgs[info.state]; }
+    else di.textContent = "";
+
+    // Gardens seasonality
+    var gardenOk = info.state !== "ok" || CONFIG.gardenMonths.indexOf(info.month) !== -1;
+    Array.prototype.forEach.call(root.querySelectorAll('input[name="spaces"]'), function (i) {
+      var list = CONFIG.spaces[mode === "daytime" ? "daytime" : "evening"];
+      var s = find(list, i.value);
+      var off = s && s.garden && !gardenOk;
+      if (off) i.checked = false;
+      i.disabled = off;
+      i.closest(".hb-card").classList.toggle("is-disabled", off);
+    });
+
+    // Guests
+    $("#hb-guest-hint").textContent = mode === "package"
+      ? "Minimum " + CONFIG.packageMinGuests + ", up to " + CONFIG.maxGuests + "."
+      : "Up to " + CONFIG.maxGuests + " guests.";
+    if (guests > CONFIG.maxGuests) warns.push("We can host up to " + CONFIG.maxGuests + " guests.");
+    if (mode === "package" && guests < CONFIG.packageMinGuests) warns.push("The party package is for " + CONFIG.packageMinGuests + " guests or more.");
+
+    var spaceIds = checkedAll("spaces");
+    var foodId = chosen("food");
+    if (mode !== "package" && spaceIds.length === 0) warns.push("Choose at least one space.");
+    var spaceList = CONFIG.spaces[mode === "daytime" ? "daytime" : "evening"];
+    spaceIds.forEach(function (id) {
+      var s = find(spaceList, id);
+      if (s.maxGuests && guests > s.maxGuests) warns.push(s.title + " holds up to " + s.maxGuests + " people.");
+      if (s.needsFood && foodId === "none") warns.push(s.title + " is free when you book food with us.");
+      if (id === "upstairs" && foodId === "none") warns.push("The upstairs function room is for food and meals only.");
+    });
+
+    // Lines
+    var lines = [];
+    var slot = $("#hb-slot").value;
+    if (mode === "package") {
+      lines.push({ label: "Party package", note: "6 hours exclusive ground floor hire, " + slot + ", buffet for " + CONFIG.packageGuestsIncluded + ", shimmer wall", amt: CONFIG.packagePrice });
+    }
+    spaceIds.forEach(function (id) {
+      var s = find(spaceList, id);
+      var note = mode === "daytime" ? "Daytime hire" : "6 hours exclusive, " + slot;
+      if (s.price == null) lines.push({ label: s.title, note: note, amt: 0, request: true });
+      else lines.push({ label: s.title, note: s.price === 0 ? "Free with food" : note, amt: s.price, free: s.price === 0 });
+    });
+
+    var food = find(CONFIG.food, foodId);
+    if (mode === "package") {
+      var extra = Math.max(0, guests - CONFIG.packageGuestsIncluded);
+      if (extra) lines.push({ label: food.title + " for extra guests", note: extra + " × from " + fmt(food.price), amt: extra * food.price });
+    } else if (food && food.price) {
+      lines.push({ label: food.title, note: guests + " × " + (food.from ? "from " : "") + fmt(food.price), amt: guests * food.price });
+    }
+    if (chosen("dessert")) lines.push({ label: CONFIG.dessert.title, note: guests + " × " + fmt(CONFIG.dessert.price), amt: guests * CONFIG.dessert.price });
+    CONFIG.drinks.forEach(function (d) {
+      var n = drinkQty(d.id);
+      $("#hb-qty-" + d.id).closest(".hb-drink").classList.toggle("has-qty", n > 0);
+      if (n) lines.push({ label: d.title, note: n + " × " + fmt(d.price), amt: n * d.price });
+    });
+    checkedAll("extras").forEach(function (id) {
+      var x = find(CONFIG.extras, id);
+      lines.push({ label: x.title, note: x.desc, amt: x.price || 0, request: x.price == null });
+    });
+
+    var total = lines.reduce(function (s, l) { return s + l.amt; }, 0);
+    var hasRequest = lines.some(function (l) { return l.request; });
+    var hasFrom = (food && food.from && (mode !== "package" ? food.price : guests > CONFIG.packageGuestsIncluded));
+
+    // Render
+    var wl = $("#hb-warns"); wl.textContent = "";
+    warns.forEach(function (w) { var li = document.createElement("li"); li.textContent = w; wl.appendChild(li); });
+    var ul = $("#hb-lines"); ul.textContent = "";
+    if (!lines.length) { var e = document.createElement("li"); e.className = "hb-empty"; e.textContent = "Choose a space to start your quote."; ul.appendChild(e); }
+    lines.forEach(function (l) {
+      var li = document.createElement("li"); li.className = "hb-line";
+      var lab = document.createElement("span"); lab.className = "hb-line-label"; lab.textContent = l.label;
+      if (l.note) { var sm = document.createElement("small"); sm.textContent = l.note; lab.appendChild(sm); }
+      var dots = document.createElement("span"); dots.className = "hb-line-dots";
+      var amt = document.createElement("span"); amt.className = "hb-line-amt" + (l.request ? " is-request" : "");
+      amt.textContent = l.request ? "On request" : l.free ? "Free" : fmt(l.amt);
+      li.appendChild(lab); li.appendChild(dots); li.appendChild(amt); ul.appendChild(li);
+    });
+    $("#hb-total").textContent = fmt(total);
+    $("#hb-bar-total").textContent = fmt(total);
+    $("#hb-total-label").textContent = hasRequest ? "Estimated total, plus items on request" : "Estimated total";
+    $("#hb-quote-sub").textContent = info.state === "ok"
+      ? info.pretty + (mode !== "daytime" ? ", " + slot : "") + ", " + guests + " guests"
+      : "Choose a date to see it on your quote";
+    $("#hb-meta").innerHTML = (total && CONFIG.depositAmount) ? "A <strong>" + fmt(Math.min(CONFIG.depositAmount, total)) + "</strong> deposit is due on booking." : "";
+    var validTo = new Date(today.getTime() + CONFIG.quoteValidDays * 864e5);
+    var vat = CONFIG.pricesIncludeVat === true ? ", including VAT" : CONFIG.pricesIncludeVat === false ? ", excluding VAT" : "";
+    $("#hb-small-print").textContent = "This is an estimate based on your choices" + vat + "." +
+      (hasFrom ? " Food is shown at our starting price and we'll confirm your final menu price." : "") +
+      " Your date isn't held until we confirm it with you. Prices valid until " +
+      validTo.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" }) + ".";
+
+    lastQuote = { mode: mode, info: info, guests: guests, lines: lines, total: total, warns: warns, slot: slot, spaceIds: spaceIds, foodId: foodId };
+    return lastQuote;
+  }
+
+  $("#hb-steps").addEventListener("input", calculate);
+  $("#hb-steps").addEventListener("change", calculate);
+
+  function scrollToEl(el) { el.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" }); }
+  $("#hb-go-details").addEventListener("click", function () {
+    var q = calculate();
+    if (q.info.state !== "ok") { scrollToEl($("#hb-date").closest("fieldset")); $("#hb-date").focus({ preventScroll: true }); return; }
+    scrollToEl($("#hb-details")); $("#hb-name").focus({ preventScroll: true });
+  });
+  $("#hb-print").addEventListener("click", function () { window.print(); });
+  $("#hb-bar-btn").addEventListener("click", function () { scrollToEl($("#hb-quote")); });
+  if ("IntersectionObserver" in window) {
+    new IntersectionObserver(function (en) { root.classList.toggle("hb-quote-visible", en[0].isIntersecting); }).observe($("#hb-quote"));
+  }
+
+  // Details form
+  var form = $("#hb-form");
+  var required = Array.prototype.slice.call(form.querySelectorAll("[data-required]"));
+  function fieldValid(f) {
+    var g = f.getAttribute("data-group");
+    if (g) return !!form.querySelector('[name="' + g + '"]:checked');
+    var i = f.querySelector("input"), v = i.value.trim();
+    if (!v) return false;
+    if (i.type === "email") return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+    return true;
+  }
+  form.addEventListener("input", function (e) {
+    var f = e.target.closest(".hb-field");
+    if (f && f.classList.contains("is-invalid") && fieldValid(f)) f.classList.remove("is-invalid");
+  });
+  form.addEventListener("change", function () { form.dispatchEvent(new Event("input")); });
+  function val(n) { var el = form.querySelector('[name="' + n + '"]:checked'); return el ? el.value : ""; }
+
+  function scoreLead(q) {
+    var s = 0;
+    s += q.info.state === "ok" ? 2 : 0;
+    s += q.warns.length === 0 ? 2 : 0;
+    s += (q.mode === "package" || (q.foodId && q.foodId !== "none")) ? 3 : 0;   // Booking food or the package
+    var t = val("decision_timeline");
+    s += (t === "Ready now" || t === "Within 2 weeks") ? 2 : t === "Within a month" ? 1 : 0;
+    s += val("date_flex") === "Flexible" ? 1 : 0;
+    return { score: s, tier: s >= 8 ? "Hot" : s >= 5 ? "Warm" : "Cold" };
+  }
+  function quoteRef() {
+    var c = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789", r = "";
+    for (var i = 0; i < 5; i++) r += c[Math.floor(Math.random() * c.length)];
+    return "TH-" + r;
+  }
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var status = $("#hb-status"); status.className = "hb-status"; status.textContent = "";
+    var q = calculate();
+    if (q.info.state !== "ok") { status.className = "hb-status is-error"; status.textContent = "Choose an available date in step 2 before sending your quote."; return; }
+    if (q.mode !== "package" && q.spaceIds.length === 0) { status.className = "hb-status is-error"; status.textContent = "Choose a space in step 3 before sending your quote."; return; }
+
+    var firstBad = null;
+    required.forEach(function (f) { var ok = fieldValid(f); f.classList.toggle("is-invalid", !ok); if (!ok && !firstBad) firstBad = f; });
+    if (firstBad) {
+      status.className = "hb-status is-error";
+      status.textContent = "Some details are missing. Check the highlighted questions above.";
+      firstBad.scrollIntoView({ behavior: "smooth", block: "center" });
+      var fe = firstBad.querySelector("input"); if (fe) fe.focus({ preventScroll: true });
+      return;
+    }
+    if (CONFIG.formEndpoint.indexOf("YOUR_FORM_ID") !== -1) {
+      status.className = "hb-status is-error";
+      status.textContent = "This form isn't connected yet. Add your form endpoint in the settings block in the page code.";
+      return;
+    }
+
+    var lead = scoreLead(q), ref = quoteRef(), name = $("#hb-name").value.trim();
+    var occasion = $("#hb-occasion").value || "Not given";
+    var modeTitle = CONFIG.modeTitles[q.mode];
+    var breakdown = q.lines.map(function (l) { return l.label + (l.note ? " (" + l.note + ")" : "") + ": " + (l.request ? "On request" : fmt(l.amt)); }).join("\n");
+
+    var data = new FormData(form);
+    data.append("_subject", "Private hire quote " + ref + " [" + lead.tier + " " + lead.score + "/10]: " + name + ", " + occasion + ", " + q.info.pretty + ", " + fmt(q.total));
+    data.append("quote_reference", ref);
+    data.append("hire_type", modeTitle);
+    data.append("event_date", q.info.pretty);
+    if (q.mode !== "daytime") data.append("event_times", q.slot);
+    data.append("guests", q.guests);
+    data.append("occasion", occasion);
+    data.append("spaces", (q.mode === "package" ? ["Exclusive ground floor venue hire (included)"] : []).concat(q.spaceIds.map(function (id) { return find(CONFIG.spaces[q.mode === "daytime" ? "daytime" : "evening"], id).title; })).join(", ") || "None");
+    data.append("food", find(CONFIG.food, q.foodId).title);
+    if (q.mode === "package") data.append("shimmer_wall", $("#hb-shimmer").value);
+    var drinkList = CONFIG.drinks.filter(function (d) { return drinkQty(d.id); }).map(function (d) { return drinkQty(d.id) + " × " + d.title; });
+    data.append("drinks", drinkList.length ? drinkList.join(", ") : "None");
+    data.append("quote_breakdown", breakdown);
+    data.append("quote_total", fmt(q.total));
+    if (CONFIG.depositAmount) data.append("deposit", fmt(Math.min(CONFIG.depositAmount, q.total)));
+    if (q.warns.length) data.append("warnings", q.warns.join(" "));
+    data.append("lead_score", lead.score + "/10");
+    data.append("lead_tier", lead.tier);
+
+    var btn = $("#hb-send"); btn.disabled = true; btn.textContent = "Sending…";
+    fetch(CONFIG.formEndpoint, { method: "POST", body: data, headers: { "Accept": "application/json" } })
+      .then(function (res) {
+        if (!res.ok) throw new Error("bad status");
+        form.hidden = true; root.classList.add("hb-done");
+        $("#hb-thanks-name").textContent = name;
+        $("#hb-thanks-ref").textContent = ref;
+        $("#hb-thanks-date").textContent = q.info.pretty;
+        var c = [];
+        if (CONFIG.venuePhone) c.push("call us on " + CONFIG.venuePhone);
+        if (CONFIG.contactEmail) c.push("email " + CONFIG.contactEmail);
+        if (c.length) $("#hb-thanks-contact").textContent = "If you'd like to chat sooner, " + c.join(" or ") + ".";
+        $("#hb-quote-sub").textContent = "Reference " + ref + ", " + $("#hb-quote-sub").textContent;
+        $("#hb-go-details").remove();
+        var t = $("#hb-thanks"); t.hidden = false; t.focus();
+      })
+      .catch(function () {
+        btn.disabled = false; btn.textContent = "Send quote";
+        status.className = "hb-status is-error";
+        status.textContent = "Your quote didn't send. Check your connection and try again" + (CONFIG.contactEmail ? ", or email us at " + CONFIG.contactEmail + "." : ".");
+      });
+  });
+
+  calculate();
+})();
+</script>
+</body>
+</html>
